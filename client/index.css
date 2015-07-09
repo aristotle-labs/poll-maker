@@ -33,7 +33,9 @@ body {
 .createpoll {
     background-color: #44cc46;
     border: none;
-    
+}
+
+.createpoll, #pollinfo {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
