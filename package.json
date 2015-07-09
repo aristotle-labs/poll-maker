@@ -1,0 +1,10 @@
+{
+    "name": "poller",
+    "version": "0.0.0",
+    "description": "An easy to use poll system written in NodeJS.",
+    "author": "Seth Easter <easterseth@gmail.com>",
+    "dependencies": {
+        "express": "4.13.1",
+        "socket.io": "1.3.5"
+    }
+}
