@@ -16,6 +16,13 @@ $(function() {
     
     $('#start-poll').click(function () {
         var answers = $("#poll-answers").val().split("\n");
+        var _answers = [];
+        
+        for (var i = 0; i < answers.length; i++) {
+            _answers.push({"answer": answers[i], "votes": 0});
+        }
+        
+        answers = _answers;
         
         if ($("#poll-answers").val() == "" || $("#poll-title").val() == "") return;
         

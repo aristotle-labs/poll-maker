@@ -4,6 +4,13 @@ $(function() {
     var href = window.location.href;
     var id = href.split("/").pop().replace("#", "");
     
+    window.vote = function (answer) {
+        socket.emit('pollvote', {
+           "id": id,
+           "vote": answer
+        });
+    }
+    
     socket.emit('getpollinfo', {"id": id});
     
     socket.on('pollinfo', function (data) {
@@ -11,22 +18,11 @@ $(function() {
         
         $('.lead').html(data.poll);
         
+        $('.answers').html("");
+        
         for (var i = 0; i < data.answers.length; i++)
-            $('.answers').append('<li><a href="#" class="btn btn-success">' + data.answers[i] + '</a><span class="vote" id="' + i + '"></span></li>');
+            $('.answers').append('<li><a href="" onclick="vote(' + i + ')" class="btn btn-success">' + data.answers[i].answer + '</a><br><span>' + data.answers[i].votes + '&nbsp;votes.</span></li>');
         
-        console.log(data.votes);
-        
-        for (var i = 0; i < data.votes.length; i++)
-            $("#" + i).html(data.votes[i.toString()]);
-    });
-    
-    $('.vote').each(function (index) {
-        var voteid = parseInt(this.attr('id'));
-        this.onclick(function () {
-            socket.emit('pollvote', {
-               "id": id,
-               "vote": voteid
-            });
-        })
+        console.log(data);
     });
 });

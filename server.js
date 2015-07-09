@@ -5,6 +5,7 @@ var io = require('socket.io')(server);
 var r = require("random-js")();
 
 var polls = {};
+var voted = {};
 
 app.use(express.static('client'));
 app.use(express.static('client/poll'));
@@ -20,10 +21,16 @@ app.get('/id/:id', function (req, res) {
     }
     
     console.log("requested invalid id: " + req.params.id);
-    res.redirect("/")
+    res.redirect("/");
 });
 
-io.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
+    var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+
+    console.log(ip);
+    
+    //console.log('connection :', socket.request.connection._peername);
+    
     socket.on('startpoll', function (data) {
         if (!data || !data.poll || !data.answers) return;
         
@@ -31,16 +38,6 @@ io.on('connection', function (socket) {
         var filter = poll.replace(/^\s+/, '').replace(/\s+$/, '');
         if (filter == '') return;
         
-        var answers = data.answers;
-        for (var i = 0; i < answers.length; i++) {
-            var filter2 = answers[i];
-            filter2.replace(/^\s+/, '').replace(/\s+$/, '');
-            
-            if (filter2 == '')
-                answers.splice(answers.indexOf(i), 1);
-            
-            if (answers.length == 0) return;
-        }
         
         var id = r.string(5, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
         
@@ -51,8 +48,7 @@ io.on('connection', function (socket) {
         polls[id] = {
             "id": id,
             "poll": data.poll,
-            "answers": answers,
-            "votes": {}
+            "answers": data.answers
         };
         
         console.log("New poll: \nid: " + id + "\npoll: " + data.poll);
@@ -67,18 +63,27 @@ io.on('connection', function (socket) {
     });
     
     socket.on('pollvote', function (data) {
-        if (!data || !data.id || data.vote || !polls[data.id]) return;
+        if (!data || !data.id || data.vote == null || data.vote == undefined || !polls[data.id]) return;
         
         if (typeof data.vote != "number") return;
         
-        if (polls[data.id].votes[data.vote.toString()])
-            polls[data.id].votes[data.vote.toString()]++;
-        else
-            polls[data.id].votes[data.vote.toString()] = 1;
+        if (!voted[data.id]) voted[data.id] = [];
+        
+        for (var i = 0; i < voted[data.id].length; i++)
+            if (voted[data.id][i] == ip) {
+                console.log(ip + " already voted.");
+                return;
+            }
+                
+        console.log(voted);
+        
+        polls[data.id].answers[data.vote].votes++;
+        
+        voted[data.id].push(ip);
             
         io.emit('pollinfo', polls[data.id]);
         
-        console.log(polls[data.id].votes)
+        console.log(polls[data.id].answers[data.vote].votes);
     });
 });
 
