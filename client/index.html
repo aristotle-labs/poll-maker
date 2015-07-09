@@ -1,13 +1,13 @@
 <html>
 
 <head>
+    <title>Poller</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://bootswatch.com/flatly/bootstrap.min.css">
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/bootstrap.min.js"></script>
     <script src="poller.js"></script>
 </head>
 
@@ -17,13 +17,38 @@
 
     <div class="container">
 
+        <div class="modal fade" id="createPollModal" tabindex="-1" role="dialog" aria-labelledby="createPollModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="createPollModalLabel">New Poll</h4>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="poll-title" class="control-label">Title:</label>
+                    <input id="poll-title" type="text" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="poll-answers" class="control-label">Answers (seperate by new line):</label>
+                    <textarea id="poll-answers" class="form-control"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="start-poll">Start Poll</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="main">
             <h1>Poller</h1>
             <p class="lead">An easy-to-use poll system written in NodeJS.</p>
             <br>
-            <a href="#" class="btn btn-default btn-lg btn-block createpoll">Create Poll</a>
-            <br>
-            <input type="text" class="form-control" id="pollinfo">
+            <a href="#" class="btn btn-default btn-lg btn-block createpoll" data-toggle="modal" href="#createpoll">Create Poll</a>
         </div>
 
     </div>

@@ -4,19 +4,25 @@ $(function() {
     function startpoll (opts) {
         socket.emit('startpoll', 
             {
-                "poll": opts.poll
+                "poll": opts.poll,
+                "answers": opts.answers
             }
         );
     }
     
     $('.createpoll').click(function () {
-        if ($('#pollinfo').val() == "") {
-            return;
-        } else {
-            startpoll({
-                "poll": $('#pollinfo').val()
-            });
-        }
+        $('#createPollModal').modal('show');
+    });
+    
+    $('#start-poll').click(function () {
+        var answers = $("#poll-answers").val().split("\n");
+        
+        if ($("#poll-answers").val() == "" || $("#poll-title").val() == "") return;
+        
+        startpoll({
+            "poll": $("#poll-title").val(),
+            "answers": answers
+        });
     });
     
     socket.on('pollinfo', function (data) {

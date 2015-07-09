@@ -16,13 +16,7 @@ body {
     vertical-align: middle;
 }
 
-.modal {
-    color: #191919;
-}
-
 .top-bar {
-    position: fixed;
-    width: 100%;
     top: 0;
     height: 5px;
     background-color: #0078ff;
@@ -36,13 +30,11 @@ body {
     background-color: #0078ff;
 }
 
-.createpoll {
-    background-color: #44cc46;
-    border: none;
+.answers {
+    padding: 0;
+    list-style-type: none;
 }
 
-.createpoll, #pollinfo {
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
+.answers li {
+    margin-bottom: 5px;
 }
