@@ -1,0 +1,40 @@
+body {
+    background-color: #254263;
+    color: #fff;
+}
+
+.container {
+    display: table;
+    height: 80%;
+}
+
+.main {
+    padding: 40px 15px;
+    text-align: center;
+    
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.top-bar {
+    top: 0;
+    height: 5px;
+    background-color: #0078ff;
+}
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #0078ff;
+}
+
+.createpoll {
+    background-color: #44cc46;
+    border: none;
+    
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

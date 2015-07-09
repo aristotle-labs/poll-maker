@@ -1,18 +1,15 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-var invalid = [
-    "favicon.ico"
-];
+app.use(express.static('client'));
 
-app.get('/:id', function (req, res) {
-    for (var i = 0; i < invalid.length; i++) {
-        if (invalid[i] == req.params.id) {
-            return;
-        }
-    }
-    
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + "/client/index.html")
+});
+
+app.get('/id/:id', function (req, res) {
     console.log("requested id: " + req.params.id);
     res.end("Sorry, " + req.params.id + " is not a valid poll id.");
 });
