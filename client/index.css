@@ -48,3 +48,11 @@ body {
     margin-right: auto;
     width: 50%;
 }
+
+.copyright {
+    position: fixed;
+    
+    bottom: 0;
+    margin-bottom: 6px;
+    margin-left: 4px;
+}
