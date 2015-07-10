@@ -26,10 +26,6 @@ app.get('/id/:id', function (req, res) {
 
 io.sockets.on('connection', function (socket) {
     var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
-
-    console.log(ip);
-    
-    //console.log('connection :', socket.request.connection._peername);
     
     socket.on('startpoll', function (data) {
         if (!data || !data.poll || !data.answers) return;
@@ -38,6 +34,17 @@ io.sockets.on('connection', function (socket) {
         var filter = poll.replace(/^\s+/, '').replace(/\s+$/, '');
         if (filter == '') return;
         
+        data.poll = data.poll.replace('<', '&lt;');
+        data.poll = data.poll.replace('>', '&gt;');
+        
+        for (var i = 0; i < data.answers.length; i++) {
+            var answer = data.answers[i].answer;
+            answer = answer.split("<").join("");
+            answer = answer.split(">").join("");
+            data.answers[i].answer = answer;
+            
+            //console.log(data);
+        }
         
         var id = r.string(5, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
         
@@ -59,7 +66,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('getpollinfo', function (data) {
         if (!data || !data.id) return;
         
-        socket.emit('pollinfo', polls[data.id]);
+        socket.emit('pollinfoupdate', polls[data.id]);
     });
     
     socket.on('pollvote', function (data) {
@@ -69,19 +76,18 @@ io.sockets.on('connection', function (socket) {
         
         if (!voted[data.id]) voted[data.id] = [];
         
-        for (var i = 0; i < voted[data.id].length; i++)
+        for (var i = 0; i < voted[data.id].length; i++) {
             if (voted[data.id][i] == ip) {
                 console.log(ip + " already voted.");
                 return;
             }
-                
-        console.log(voted);
+        }
         
         polls[data.id].answers[data.vote].votes++;
         
         voted[data.id].push(ip);
             
-        io.emit('pollinfo', polls[data.id]);
+        io.emit('pollinfoupdate', polls[data.id]);
         
         console.log(polls[data.id].answers[data.vote].votes);
     });

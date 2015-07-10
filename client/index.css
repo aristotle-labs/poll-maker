@@ -39,6 +39,8 @@ body {
 .createpoll {
     background-color: #44cc46;
     border: none;
+    
+    padding: 18px 0;
 }
 
 .createpoll, #pollinfo {
