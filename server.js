@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var r = require("random-js")();
+var get_ip = require('ipware')().get_ip;
 
 var polls = {};
 var voted = {};
@@ -25,7 +26,9 @@ app.get('/id/:id', function (req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-    var ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+    var ip = socket.handshake.address;
+
+     console.log(ip);
     
     socket.on('startpoll', function (data) {
         if (!data || !data.poll || !data.answers) return;
@@ -94,7 +97,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 // replace with your own port, this was developed on c9.
-var port = process.env.PORT;
+var port = 3000;
 
 server.listen(port);
 console.log("Poller running on port: " + port);
